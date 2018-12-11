@@ -49,6 +49,7 @@ window.onload = function() {
     showMole();
     clearTimeout = setTimeout(function() {
       disappearMole();
+      genMoleRandomly();
     }, genRandomTime());
   }
 };
