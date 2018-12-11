@@ -54,7 +54,7 @@ window.onload = function() {
       showMole(hole);
       clearMole = setTimeout(function() {
         disappearMole();
-        genMoleRandomly(hole, time);
+        genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
       }, time);
     } else {
       return null;
