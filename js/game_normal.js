@@ -26,6 +26,7 @@ window.onload = function() {
 
   function startGame() {
     // TODO: 写开始新游戏后发生的事
+    titleH1.innerText = 'WHACK-A-MOLE!';
     genMoleRandomly();
     hitMole();
   }
@@ -66,9 +67,15 @@ window.onload = function() {
         clearTimeout(clearMole);
         disappearMole();
         addScores();
-        setTimeout(function(){
+        setTimeout(function() {
           genMoleRandomly();
-      },400)}
+        }, 400)
+      }
     })
+  }
+
+  function endGame(){
+    titleH1.innerText = 'TIME UP!';
+    start_btn.innerText = 'Replay!';
   }
 };
