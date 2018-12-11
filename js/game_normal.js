@@ -3,7 +3,7 @@ window.onload = function() {
   const startBtn = document.getElementById('start_btn');
   const game = document.getElementById('game');
   let titleH1 = document.getElementById('title');
-  let lastHole, chosenHole, clearMole, clearMoleAfterHit;
+  let lastHole, chosenHole, clearMole;
   let timeUp = false;
   let score = 0;
   let gameTime = 10000;
@@ -41,18 +41,21 @@ window.onload = function() {
   }
 
   function showMole(hole) {
-    lastHole = `.hole${hole}`;
-    $(lastHole).toggleClass('up', true);
+    $(`.hole${hole}`).toggleClass('up', true);
+    lastHole = hole;
   }
 
   function disappearMole() {
-    $(lastHole).toggleClass('up', false);
+    $('.up').toggleClass('up', false);
   }
 
   function genMoleRandomly(hole, time) {
     if (!timeUp) {
+      while (hole === lastHole){
+        hole = genRandomNum(1,6);
+      }
       showMole(hole);
-      clearMole = setTimeout(function() {
+      clearMole = setTimeout(() => {
         disappearMole();
         genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
       }, time);
@@ -66,13 +69,11 @@ window.onload = function() {
   }
 
   function hitMole() {
-    if (chosenHole === lastHole.slice(1)) {
+    if (chosenHole) {
       clearTimeout(clearMole);
       disappearMole();
       addScores();
-      clearMoleAfterHit = setTimeout(function() {
-        genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
-      }, 400)
+      genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
     } else {
       return null;
     }
@@ -92,11 +93,10 @@ window.onload = function() {
 
   function stopShowingMole() {
     clearTimeout(clearMole);
-    clearTimeout(clearMoleAfterHit);
     disappearMole();
   }
-  game.addEventListener('click', function(event) {
-    chosenHole = event.target.parentNode.getAttribute('class').split(' ')[1];
+  game.addEventListener('click', (event) => {
+    chosenHole = event.target.parentNode.getAttribute('class').split(' ')[2];
     hitMole();
   });
 };
