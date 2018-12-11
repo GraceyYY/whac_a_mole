@@ -5,7 +5,7 @@ window.onload = function() {
   const startBtn = document.getElementById('start_btn');
   const game = document.getElementById('game');
   let titleH1 = document.getElementById('title');
-  let lastHole, clearMole, chosenHole;
+  let lastHole, chosenHole, clearMole, clearMoleAfterHit;
   let timeUp = false;
   let score = 0;
   let gameTime = 10000;
@@ -26,9 +26,14 @@ window.onload = function() {
 
   function startGame() {
     // TODO: 写开始新游戏后发生的事
-    titleH1.innerText = 'WHACK-A-MOLE!';
+    resetPageAndScore();
     genMoleRandomly();
-    hitMole();
+    setTimeout(function() {
+      timeUp = true;
+      endGamePage();
+      stopShowingMole();
+      return timeUp;
+    }, gameTime);
   }
 
   function genRandomNum() {
@@ -49,11 +54,15 @@ window.onload = function() {
   }
 
   function genMoleRandomly() {
-    showMole();
-    clearMole = setTimeout(function() {
-      disappearMole();
-      genMoleRandomly();
-    }, genRandomTime());
+    if (!timeUp) {
+      showMole();
+      clearMole = setTimeout(function() {
+        disappearMole();
+        genMoleRandomly();
+      }, genRandomTime());
+    } else {
+      return null;
+    }
   }
 
   function addScores() {
@@ -61,21 +70,37 @@ window.onload = function() {
   }
 
   function hitMole() {
-    game.addEventListener('click', function(event) {
-      chosenHole = event.target.parentNode.getAttribute('class').split(' ')[1];
-      if (chosenHole === lastHole.slice(1)) {
-        clearTimeout(clearMole);
-        disappearMole();
-        addScores();
-        setTimeout(function() {
-          genMoleRandomly();
-        }, 400)
-      }
-    })
+    if (chosenHole === lastHole.slice(1)) {
+      clearTimeout(clearMole);
+      disappearMole();
+      addScores();
+      clearMoleAfterHit = setTimeout(function() {
+        genMoleRandomly();
+      }, 400)
+    } else {
+      return null;
+    }
   }
 
-  function endGame(){
+  function endGamePage() {
     titleH1.innerText = 'TIME UP!';
     start_btn.innerText = 'Replay!';
+    startBtn.style.display = 'inline-block';
   }
+
+  function resetPageAndScore() {
+    titleH1.innerText = 'WHACK-A-MOLE!';
+    scoreBoard.innerText = '0';
+    timeUp = false;
+  }
+
+  function stopShowingMole() {
+    clearTimeout(clearMole);
+    clearTimeout(clearMoleAfterHit);
+    disappearMole();
+  }
+  game.addEventListener('click', function(event) {
+    chosenHole = event.target.parentNode.getAttribute('class').split(' ')[1];
+    hitMole();
+  });
 };
