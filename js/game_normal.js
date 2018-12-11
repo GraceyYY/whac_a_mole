@@ -27,8 +27,8 @@ window.onload = function() {
   function startGame() {
     // TODO: 写开始新游戏后发生的事
     resetPageAndScore();
-    genMoleRandomly();
-    setTimeout(function() {
+    genMoleRandomly(genRandomNum(1,6), genRandomTime(500,1200));
+    setTimeout(() => {
       timeUp = true;
       endGamePage();
       stopShowingMole();
@@ -36,16 +36,16 @@ window.onload = function() {
     }, gameTime);
   }
 
-  function genRandomNum() {
-    return Math.round(Math.random() * 5 + 1);
+  function genRandomNum(min, max) {
+    return Math.round(Math.random() * (max-min) + min);
   }
 
-  function genRandomTime() {
-    return Math.round(Math.random() * 1000 + 400);
+  function genRandomTime(min, max) {
+    return Math.round(Math.random() * (max-min) + min);
   }
 
-  function showMole() {
-    lastHole = `.hole${genRandomNum()}`;
+  function showMole(hole) {
+    lastHole = `.hole${hole}`;
     $(lastHole).toggleClass('up', true);
   }
 
@@ -53,13 +53,13 @@ window.onload = function() {
     $(lastHole).toggleClass('up', false);
   }
 
-  function genMoleRandomly() {
+  function genMoleRandomly(hole, time) {
     if (!timeUp) {
-      showMole();
+      showMole(hole);
       clearMole = setTimeout(function() {
         disappearMole();
-        genMoleRandomly();
-      }, genRandomTime());
+        genMoleRandomly(hole, time);
+      }, time);
     } else {
       return null;
     }
@@ -75,7 +75,7 @@ window.onload = function() {
       disappearMole();
       addScores();
       clearMoleAfterHit = setTimeout(function() {
-        genMoleRandomly();
+        genMoleRandomly(genRandomNum(1,6),genRandomTime(500,1200));
       }, 400)
     } else {
       return null;
