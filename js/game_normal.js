@@ -1,7 +1,5 @@
 window.onload = function() {
-  const holes = document.querySelectorAll('.hole');
   const scoreBoard = document.getElementById('score');
-  const moles = document.querySelectorAll('.mole');
   const startBtn = document.getElementById('start_btn');
   const game = document.getElementById('game');
   let titleH1 = document.getElementById('title');
@@ -17,7 +15,6 @@ window.onload = function() {
   function showBtnAnimation() {
     event.preventDefault();
     startBtn.classList.add('animate');
-    // 按钮动画延时，按钮动画结束后发生的事：换为正常状态（class中的animate去掉），开始按钮消失
     setTimeout(() => {
       startBtn.classList.remove('animate');
       startBtn.style.display = 'none';
@@ -25,9 +22,8 @@ window.onload = function() {
   }
 
   function startGame() {
-    // TODO: 写开始新游戏后发生的事
     resetPageAndScore();
-    genMoleRandomly(genRandomNum(1,6), genRandomTime(500,1200));
+    genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
     setTimeout(() => {
       timeUp = true;
       endGamePage();
@@ -37,11 +33,11 @@ window.onload = function() {
   }
 
   function genRandomNum(min, max) {
-    return Math.round(Math.random() * (max-min) + min);
+    return Math.round(Math.random() * (max - min) + min);
   }
 
   function genRandomTime(min, max) {
-    return Math.round(Math.random() * (max-min) + min);
+    return Math.round(Math.random() * (max - min) + min);
   }
 
   function showMole(hole) {
@@ -75,7 +71,7 @@ window.onload = function() {
       disappearMole();
       addScores();
       clearMoleAfterHit = setTimeout(function() {
-        genMoleRandomly(genRandomNum(1,6),genRandomTime(500,1200));
+        genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
       }, 400)
     } else {
       return null;
