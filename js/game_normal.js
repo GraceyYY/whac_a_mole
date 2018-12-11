@@ -1,8 +1,9 @@
 window.onload = function() {
   const holes = document.querySelectorAll('.hole');
-  const scoreBoard = document.querySelector('.score');
+  const scoreBoard = document.getElementById('.score');
   const moles = document.querySelectorAll('.mole');
   const startBtn = document.getElementById('start_btn');
+  const game = document.getElementById('game');
   let titleH1 = document.getElementById('title');
   let lastHole, clearTimeout;
   let timeUp = false;
@@ -37,11 +38,11 @@ window.onload = function() {
 
   function showMole() {
     lastHole = `.hole${genRandomNum()}`;
-    $(lastHole).toggleClass("up");
+    $(lastHole).toggleClass('up');
   }
 
   function disappearMole() {
-    $(lastHole).toggleClass("up");
+    $(lastHole).toggleClass('up');
   }
 
   function genMoleRandomly() {
