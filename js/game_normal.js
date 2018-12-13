@@ -1,11 +1,11 @@
 window.onload = function() {
+  const moles = document.querySelectorAll('.mole');
   const scoreBoard = document.getElementById('score');
   const startBtn = document.getElementById('start_btn');
   const game = document.getElementById('game');
   let titleH1 = document.getElementById('title');
-  let lastHole, chosenHole, clearMole;
+  let lastHole, currentMole, chosenHole, clearMole;
   let timeUp = false;
-  let score = 0;
   let gameTime = 10000;
   startBtn.addEventListener('click', function() {
     showBtnAnimation();
@@ -23,26 +23,18 @@ window.onload = function() {
 
   function startGame() {
     resetPageAndScore();
-    genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
+    genMoleRandomly(genRandomNum(1, 6), genRandomNum(500, 1200));
     setTimeout(() => {
       timeUp = true;
       endGamePage();
       stopShowingMole();
-      return timeUp;
     }, gameTime);
-  }
-
-  function genRandomNum(min, max) {
-    return Math.round(Math.random() * (max - min) + min);
-  }
-
-  function genRandomTime(min, max) {
-    return Math.round(Math.random() * (max - min) + min);
   }
 
   function showMole(hole) {
     $(`.hole${hole}`).toggleClass('up', true);
     lastHole = hole;
+    currentMole = document.querySelector(`.hole${hole}`).childNodes[1];
   }
 
   function disappearMole() {
@@ -51,32 +43,26 @@ window.onload = function() {
 
   function genMoleRandomly(hole, time) {
     if (!timeUp) {
-      while (hole === lastHole){
-        hole = genRandomNum(1,6);
+      while (hole === lastHole) {
+        hole = genRandomNum(1, 6);
       }
       showMole(hole);
       clearMole = setTimeout(() => {
         disappearMole();
-        genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
+        genMoleRandomly(genRandomNum(1, 6), genRandomNum(500, 1200));
       }, time);
-    } else {
-      return null;
     }
   }
 
-  function addScores() {
-    scoreBoard.innerText = parseInt(scoreBoard.innerText) + 1;
+  function updateScores() {
+    scoreBoard.innerText = score;
   }
 
   function hitMole() {
-    if (chosenHole) {
-      clearTimeout(clearMole);
-      disappearMole();
-      addScores();
-      genMoleRandomly(genRandomNum(1, 6), genRandomTime(500, 1200));
-    } else {
-      return null;
-    }
+    clearTimeout(clearMole);
+    disappearMole();
+    addScores();
+    genMoleRandomly(genRandomNum(1, 6), genRandomNum(500, 1200));
   }
 
   function endGamePage() {
@@ -87,16 +73,30 @@ window.onload = function() {
 
   function resetPageAndScore() {
     titleH1.innerText = 'WHACK-A-MOLE!';
-    scoreBoard.innerText = '0';
+    score = 0;
     timeUp = false;
+    updateScores();
   }
 
   function stopShowingMole() {
     clearTimeout(clearMole);
     disappearMole();
   }
-  game.addEventListener('click', (event) => {
-    chosenHole = event.target.parentNode.getAttribute('class').split(' ')[2];
-    hitMole();
-  });
+  moles.forEach((mole) => {
+    mole.addEventListener('click', (e) => {
+      if (e.target === currentMole) {
+        hitMole();
+      }
+      updateScores();
+    })
+  })
 };
+let score = 0;
+
+function addScores() {
+  return score += 1;
+}
+
+function genRandomNum(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
+}
